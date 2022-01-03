@@ -4,15 +4,22 @@ final class PlayerNode: SCNNode {
 
     override init() {
         super.init()
+        
+        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        
+        // retrieve the ship node
+        let shipMesh = scene.rootNode.childNode(withName: "shipMesh", recursively: true)!
+        let scaleFactor: Float = 0.1
+        scale = SCNVector3(x: scaleFactor, y: scaleFactor, z: scaleFactor)
 
         // create player
         let playerGeometry = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
         playerGeometry.firstMaterial?.diffuse.contents = UIColor.brown
 
-        position = SCNVector3(x: 0, y: 0.5, z: 0)
+        position = SCNVector3(x: 0, y: 0, z: 0)
 
         // give the looks
-        geometry = playerGeometry
+        geometry = shipMesh.geometry
 
         // define shape, here a box around the player
         let shape = SCNPhysicsShape(
