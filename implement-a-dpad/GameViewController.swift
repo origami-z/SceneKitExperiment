@@ -29,6 +29,7 @@ class GameViewController: UIViewController {
 
     var touch: UITouch?
     var direction = float2(0, 0)
+    var isWalking = false
 }
 
 extension GameViewController {
@@ -45,7 +46,8 @@ extension GameViewController {
             // check whether our touch is within our dpad
             let touchLocation = touch.location(in: self.view)
             if gameView.virtualDPad().contains(touchLocation) {
-
+                isWalking = true
+                
                 let middleOfCircleX = gameView.virtualDPad().origin.x + 75
                 let middleOfCircleY = gameView.virtualDPad().origin.y + 75
 
@@ -60,14 +62,20 @@ extension GameViewController {
             }
         }
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isWalking = false
+    }
 }
 
 extension GameViewController: SCNSceneRendererDelegate {
 
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-
-        let directionInV3 = float3(x: direction.x, y: 0, z: direction.y)
-        playerNode.walkInDirection(directionInV3)
+        
+        if isWalking {
+            let directionInV3 = float3(x: direction.x, y: 0, z: direction.y)
+            playerNode.walkInDirection(directionInV3)
+        }
 
         // let camera follow player
         cameraNode.position.x = playerNode.presentation.position.x
